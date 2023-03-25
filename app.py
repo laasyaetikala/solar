@@ -8,7 +8,7 @@ import numpy as np
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 import os
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 import time
 
 app=Flask(__name__)
@@ -22,25 +22,6 @@ app.config['MYSQL_CURSORCLASS']='DictCursor'
 
 #init MySQL
 mysql=MySQL(app)
-
-def PIRSensor():
-    pir=17
-    sound=20
-    GPIO.setwarnings(False)
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(pir,GPIO.IN)
-    GPIO.setup(sound,GPIO.OUT)
-    while(True):
-        temp=GPIO.input(pir)
-        if(temp):
-            print("No motion detected")
-            GPIO.output(sound,GPIO.LOW)
-        else:
-            print("Motion detected")
-            GPIO.output(sound,GPIO.HIGH)
-    GPIO.cleanup()
-
-
 
 class Login(Form):
     email=StringField('email')
@@ -59,21 +40,15 @@ def login():
 @app.route('/main',methods=['GET','POST'])
 def index():
     return render_template('index.html')
-   
-@app.route('/pir',methods=['GET','POST'])
-def pir():
-    if(request.method=='POST'):
-        check=request.form['submit1']
-        if(check=="check"):
-            PIRSensor()
-    return render_template('pir.html')
+
 
 def predict_crack():
     # Load the trained model
     model = load_model('crack_detection.h5')
 
     # Load the image to be classified
-    img_path = '/home/iotlab/project/crack_test_images/cell0009.png'
+    #img_path = '/home/iotlab/project/crack_test_images/cell0009.png'
+    img_path='D:/Crack detection/pv_images/No_crack/cell0009.png'
     img = image.load_img(img_path, target_size=(300, 300), color_mode='grayscale')
 
     # Preprocess the image and convert it to a numpy array
