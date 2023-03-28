@@ -1,4 +1,4 @@
-from flask import Flask, render_template,flash,redirect,url_for,session,logging,request
+from flask import Flask, render_template,flash,redirect,url_for,session,logging,request,jsonify
 from datetime import date
 from flask_mysqldb import MySQL
 from wtforms import Form, StringField, TextAreaField, PasswordField, FileField,SelectField,validators
@@ -10,6 +10,8 @@ from tensorflow.keras.preprocessing import image
 import os
 #import RPi.GPIO as GPIO
 import time
+
+from PIL import Image
 
 app=Flask(__name__)
 
@@ -42,14 +44,14 @@ def index():
     return render_template('index.html')
 
 
-def predict_crack():
+def predict_crack(img):
     # Load the trained model
-    model = load_model('crack_detection.h5')
+    # model = load_model('crack_detection.h5')
 
     # Load the image to be classified
     #img_path = '/home/iotlab/project/crack_test_images/cell0009.png'
-    img_path='D:/Crack detection/pv_images/No_crack/cell0009.png'
-    img = image.load_img(img_path, target_size=(300, 300), color_mode='grayscale')
+    # img_path='D:/Crack detection/pv_images/No_crack/cell0009.png'
+    # img = image.load_img(img_path, target_size=(300, 300), color_mode='grayscale')
 
     # Preprocess the image and convert it to a numpy array
     x = image.img_to_array(img)
@@ -66,15 +68,47 @@ def predict_crack():
 
 
 
-@app.route('/crack',methods=['GET','POST'])
-def crack():
-    if(request.method=='POST'):
-        check=request.form['submit1']
-        if(check=="check"):
-            res=predict_crack()
-            #res=1
-            return render_template('crack.html',res=res)
-    return render_template('crack.html')
+
+# Load the ML model
+model = load_model('crack_detection.h5')
+
+# Define a route for handling the image upload and prediction
+@app.route('/predict', methods=['POST'])
+def predict():
+    # Get the uploaded image file
+    file = request.files['file']
+
+    print(file)
+    # Preprocess the image
+    img = Image.open(file)
+    #predict_crack(img)    
+    img = img.resize((300, 300))
+    img = img.convert("L")
+    res=predict_crack(img)
+    print('res: ',res)
+    return render_template('crack.html',res=res)
+    # img = np.array(img) / 255.0
+    # img = np.expand_dims(img, axis=0)
+
+    # # Use the ML model to make a prediction
+    # pred = model.predict(img)[0]
+
+    # # Return the prediction as JSON
+    # return jsonify({
+    #     'dusty': str(pred[0]),
+    #     'clean': str(pred[1])
+    # })
+
+
+# @app.route('/crack',methods=['GET','POST'])
+# def crack():
+#     if(request.method=='POST'):
+#         check=request.form['submit1']
+#         if(check=="check"):
+#             res=predict_crack()
+#             #res=1
+#             return render_template('crack.html',res=res)
+#     return render_template('crack.html')
 
 
 if __name__=='__main__':
