@@ -14,14 +14,14 @@ app=Flask(__name__)
 
 
 #init MySQL
-mysql=MySQL(app)
+# mysql=MySQL(app)
 
 #config MySQL
-app.config['MYSQL_HOST']='localhost'
-app.config['MYSQL_USER']='root'
-app.config['MYSQL_PASSWORD']=''
-app.config['MYSQL_DB']='major_project'
-app.config['MYSQL_CURSORCLASS']='DictCursor'
+# app.config['MYSQL_HOST']='localhost'
+# app.config['MYSQL_USER']='root'
+# app.config['MYSQL_PASSWORD']=''
+# app.config['MYSQL_DB']='major_project'
+# app.config['MYSQL_CURSORCLASS']='DictCursor'
 
 class Login(Form):
     email=StringField('email')
@@ -127,7 +127,7 @@ def d_predict():
         res2= 'The image is clean'
     print('res: ',res2)
     return res2 #render_template('index.html',res=res)
-
+'''
 @app.route('/notifications', methods=['POST'])
 def notifications():
     if request.method=='POST':
@@ -156,8 +156,8 @@ def notifications():
 
         return render_template('notifications.html',res=res,notification=notification)
 
-
+'''
 
 if __name__=='__main__':
     app.secret_key='123456'
-    app.run(host='0.0.0.0',port=8080,debug=True)
+    app.run(debug=True)
