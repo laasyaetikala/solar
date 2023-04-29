@@ -1,0 +1,54 @@
+{% include 'layout.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- breadcrumb-section -->
+	<div class="breadcrumb-section breadcrumb-bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 offset-lg-2 text-center">
+					<div class="breadcrumb-text">
+						<h1>Notifications</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end breadcrumb section -->
+
+    <!--PreLoader-->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <!--PreLoader Ends-->
+
+    <div class="product-section mt-150 mb-150">
+		<div class="container">
+            <form method="post" action="/notifications">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 text-center">
+                        {% for n in notification %}
+                        <div class="single-product-item">
+                            <br>
+                            <p><b>Parameter: {{ n.option }}</b></p>
+                            <p><b>Message: {{ n.message }}</b></p>
+                            <p><b>Recorded Time: {{ n.timestamp }}</b></p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
